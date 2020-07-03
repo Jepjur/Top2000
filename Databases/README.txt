@@ -1,0 +1,1 @@
+Hier staan queries en stored procedures, voordat ze naar ASP.net gaan.
