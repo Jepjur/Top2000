@@ -1,0 +1,74 @@
+﻿@model PagedList.IPagedList<Top2000.Models.uspSongsLost100Places_Result>
+@using PagedList.Mvc
+
+
+@{
+    ViewBag.Title = "Index";
+    <h2>Songs die meer dan 100 plaatsen zijn gedaald tov het voorgaande jaar</h2>
+}
+
+@Html.Partial("YearFilter")
+
+
+<table class="table table-striped table-dark " id="yearlist">
+    <thead>
+
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().titel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().naam)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().positie)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().vorig_jaar)
+            </th>
+            <th>
+                @Html.ActionLink(Html.DisplayNameFor(model => model.FirstOrDefault().verschil).ToString(),
+                               "LostMoreThan100", new
+                               {
+                                   sortOrder = ViewBag.NameSortParm == "verschil_asc" ? "verschil_desc" : "verschil_asc",
+                                   year = ViewBag.CurrentFilter
+
+                               })
+            </th>
+
+
+
+            <th></th>
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+        @foreach (var item in Model)
+        {
+            <tr class="listRow">
+                <td>
+                    @Html.DisplayFor(modelItem => item.titel)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.naam)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.positie)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.vorig_jaar)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.verschil)
+                </td>
+            </tr>
+        }
+
+    </tbody>
+
+</table>
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+@Html.PagedListPager(Model, page => Url.Action("LostMoreThan100", "Stats",
+    new { year = ViewBag.CurrentFilter, page = page }))

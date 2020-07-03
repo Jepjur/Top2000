@@ -1,0 +1,8 @@
+﻿@using (Html.BeginForm(FormMethod.Get))
+{
+    <div>
+        <div class="col-md-4">
+            @Html.DropDownList("year", null, new { onchange = @"form.submit();", @class = "form-control" })
+        </div>
+    </div>
+}

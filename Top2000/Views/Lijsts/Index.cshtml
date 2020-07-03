@@ -1,0 +1,54 @@
+﻿@model PagedList.IPagedList<Top2000.Models.Lijst>
+@using PagedList.Mvc
+@{
+    ViewBag.Title = "Index";
+}
+
+    <h2>
+        @Html.DisplayFor(model => model.FirstOrDefault().Top2000Jaar1.Titel)
+    </h2>
+Hier een lijst kiezen:
+@Html.Partial("YearFilter")
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table table-striped table-dark">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().positie)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().Song.titel)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().Song.Artiest.naam)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.positie)
+            </td>
+            <td>
+                @Html.ActionLink(item.Song.titel, "Details", "Songs", new { id = item.songid}, htmlAttributes: null)
+            </td>
+            <td>
+                @Html.ActionLink(item.Song.Artiest.naam, "Details", "Artiests", new { id = item.Song.artiestid }, htmlAttributes: null)
+            </td>
+          
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+    }
+
+</table>
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new { year = ViewBag.CurrentFilter , page = page }))

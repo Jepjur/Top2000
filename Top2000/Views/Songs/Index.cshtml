@@ -1,0 +1,88 @@
+﻿@model PagedList.IPagedList<Top2000.Models.Song>
+@using PagedList.Mvc
+
+<h2>Nummers</h2>
+@using (Html.BeginForm())
+{
+    @Html.Partial("Search")
+}
+
+
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table table-striped table-dark">
+    <tr>
+        <th>
+            @Html.ActionLink(Html.DisplayNameFor(model => model.FirstOrDefault().titel).ToString(),
+           "Index", new
+           {
+               sortOrder = ViewBag.NameSortParm == "titel_asc" ? "titel_desc" : "titel_asc",
+               searchString = ViewBag.CurrentFilter
+           })
+        </th>
+        <th>
+            @Html.ActionLink(Html.DisplayNameFor(model => model.FirstOrDefault().Artiest.naam).ToString(),
+           "Index", new
+           {
+               sortOrder = ViewBag.NameSortParm == "artiest_asc" ? "artiest_desc" : "artiest_asc",
+               searchString = ViewBag.CurrentFilter
+
+           })
+        </th>
+        <th>
+            @Html.ActionLink(Html.DisplayNameFor(model => model.FirstOrDefault().jaar).ToString(), "Index",
+                new
+                {
+                    sortOrder = ViewBag.NameSortParm == "year_asc" ? "year_desc" : "year_asc",
+                    searchString = ViewBag.CurrentFilter
+                })
+
+        </th>
+        <th>Artiest Foto</th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.titel)
+            </td>
+            <td>
+                @Html.ActionLink(item.Artiest.naam, "Details", "Artiests", new { id = item.artiestid }, htmlAttributes: null)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.jaar)
+            </td>
+            <td>
+
+                @{
+                    if (item.Artiest.foto.IsEmpty())
+                    {
+                        <img width="100" height="100" src="https://artkentro.com/uploads/hub/1560326382ampd-dubai.jpg">
+                    }
+                    else
+                    {
+                        <a href="@item.Artiest.foto" target="_blank">
+                            <img width="100" height="100" src="@Html.DisplayFor(modelItem => item.Artiest.foto)">
+                        </a>
+                    }
+                }
+
+            </td>
+
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.songid }) |
+                @Html.ActionLink("Details", "Details", new { id = item.songid }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.songid })
+            </td>
+        </tr>
+    }
+
+</table>
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page = page, searchString = ViewBag.CurrentFilter }))
+

@@ -1,0 +1,54 @@
+﻿@model Top2000.Models.Artiest
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Artiest</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.naam)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.naam)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.wiki)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.wiki)
+        </dd>
+        <dt>
+            Aantal nummers :
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Songs.Count)
+        </dd>
+        <dd>
+
+            @{
+                if (Model.foto.IsEmpty())
+                {
+                    <img width="100" height="100" src="https://artkentro.com/uploads/hub/1560326382ampd-dubai.jpg">
+                }
+                else
+                {
+                    <a href="@Model.foto" target="_blank">
+                        <img width="100" height="100" src="@Html.DisplayFor(modelItem => Model.foto)">
+                    </a>
+                }
+            }
+        </dd>
+
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Artiestid }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

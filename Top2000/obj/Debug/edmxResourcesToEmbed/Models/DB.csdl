@@ -1,0 +1,301 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="DB_A63478_DeechteTOP2000Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Artiest">
+    <Key>
+      <PropertyRef Name="Artiestid" />
+    </Key>
+    <Property Name="Artiestid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="naam" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Songs" Relationship="Self.FK_Song_Artiest" FromRole="Artiest" ToRole="Song" />
+    <Property Name="foto" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="wiki" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="Lijst">
+    <Key>
+      <PropertyRef Name="songid" />
+      <PropertyRef Name="top2000jaar" />
+    </Key>
+    <Property Name="songid" Type="Int32" Nullable="false" />
+    <Property Name="top2000jaar" Type="Int32" Nullable="false" />
+    <Property Name="positie" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Song" Relationship="Self.FK_Lijst_Song" FromRole="Lijst" ToRole="Song" />
+    <NavigationProperty Name="Top2000Jaar1" Relationship="Self.FK_Lijst_Top2000Jaar" FromRole="Lijst" ToRole="Top2000Jaar" />
+  </EntityType>
+  <EntityType Name="Song">
+    <Key>
+      <PropertyRef Name="songid" />
+    </Key>
+    <Property Name="songid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="artiestid" Type="Int32" Nullable="false" />
+    <Property Name="titel" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="jaar" Type="Int32" />
+    <NavigationProperty Name="Artiest" Relationship="Self.FK_Song_Artiest" FromRole="Song" ToRole="Artiest" />
+    <NavigationProperty Name="Lijsts" Relationship="Self.FK_Lijst_Song" FromRole="Song" ToRole="Lijst" />
+    <Property Name="songtekst" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Video" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="Top2000Jaar">
+    <Key>
+      <PropertyRef Name="Jaar" />
+    </Key>
+    <Property Name="Jaar" Type="Int32" Nullable="false" />
+    <Property Name="Titel" Type="String" MaxLength="21" FixedLength="false" Unicode="false" annotation:StoreGeneratedPattern="Computed" />
+    <NavigationProperty Name="Lijsts" Relationship="Self.FK_Lijst_Top2000Jaar" FromRole="Top2000Jaar" ToRole="Lijst" />
+  </EntityType>
+  <Association Name="FK_Song_Artiest">
+    <End Role="Artiest" Type="Self.Artiest" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Song" Type="Self.Song" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Artiest">
+        <PropertyRef Name="Artiestid" />
+      </Principal>
+      <Dependent Role="Song">
+        <PropertyRef Name="artiestid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Lijst_Song">
+    <End Role="Song" Type="Self.Song" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Lijst" Type="Self.Lijst" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Song">
+        <PropertyRef Name="songid" />
+      </Principal>
+      <Dependent Role="Lijst">
+        <PropertyRef Name="songid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Lijst_Top2000Jaar">
+    <End Role="Top2000Jaar" Type="Self.Top2000Jaar" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Lijst" Type="Self.Lijst" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Top2000Jaar">
+        <PropertyRef Name="Jaar" />
+      </Principal>
+      <Dependent Role="Lijst">
+        <PropertyRef Name="top2000jaar" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="DB_A63478_DeechteTOP2000Entities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Artiests" EntityType="Self.Artiest" />
+    <EntitySet Name="Lijsts" EntityType="Self.Lijst" />
+    <EntitySet Name="Songs" EntityType="Self.Song" />
+    <EntitySet Name="Top2000Jaar" EntityType="Self.Top2000Jaar" />
+    <AssociationSet Name="FK_Song_Artiest" Association="Self.FK_Song_Artiest">
+      <End Role="Artiest" EntitySet="Artiests" />
+      <End Role="Song" EntitySet="Songs" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Lijst_Song" Association="Self.FK_Lijst_Song">
+      <End Role="Song" EntitySet="Songs" />
+      <End Role="Lijst" EntitySet="Lijsts" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Lijst_Top2000Jaar" Association="Self.FK_Lijst_Top2000Jaar">
+      <End Role="Top2000Jaar" EntitySet="Top2000Jaar" />
+      <End Role="Lijst" EntitySet="Lijsts" />
+    </AssociationSet>
+    <FunctionImport Name="spImport">
+      <Parameter Name="ARTIEST" Mode="In" Type="String" />
+      <Parameter Name="TITEL" Mode="In" Type="String" />
+      <Parameter Name="JAAR" Mode="In" Type="Int32" />
+      <Parameter Name="POSITIE" Mode="In" Type="Int32" />
+      <Parameter Name="TOP2000JAAR" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="uspAllArtistSongs" ReturnType="Collection(DB_A63478_DeechteTOP2000Model.uspAllArtistSongs_Result)">
+      <Parameter Name="artist" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="uspArtistWithMuchSongs" ReturnType="Collection(DB_A63478_DeechteTOP2000Model.uspArtistWithMuchSongs_Result)">
+      <Parameter Name="year" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="uspGoneFromList" ReturnType="Collection(DB_A63478_DeechteTOP2000Model.uspGoneFromList_Result)">
+      <Parameter Name="year" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="uspNewlyListed" ReturnType="Collection(DB_A63478_DeechteTOP2000Model.uspNewlyListed_Result)">
+      <Parameter Name="year" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="uspNumSongsPerArtistPerYear" ReturnType="Collection(DB_A63478_DeechteTOP2000Model.uspNumSongsPerArtistPerYear_Result)">
+      <Parameter Name="year" Mode="In" Type="Int32" />
+      <Parameter Name="artistName" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="uspSongsGained100Places" ReturnType="Collection(DB_A63478_DeechteTOP2000Model.uspSongsGained100Places_Result)">
+      <Parameter Name="year" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="uspSongsGainedPlaces" ReturnType="Collection(DB_A63478_DeechteTOP2000Model.uspSongsGainedPlaces_Result)">
+      <Parameter Name="year" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="uspSongsLost100Places" ReturnType="Collection(DB_A63478_DeechteTOP2000Model.uspSongsLost100Places_Result)">
+      <Parameter Name="year" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="uspSongsLostPlaces" ReturnType="Collection(DB_A63478_DeechteTOP2000Model.uspSongsLostPlaces_Result)">
+      <Parameter Name="year" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="uspSongsOnSamePosition" ReturnType="Collection(DB_A63478_DeechteTOP2000Model.uspSongsOnSamePosition_Result)">
+      <Parameter Name="year" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="uspSongsPerYear" ReturnType="Collection(DB_A63478_DeechteTOP2000Model.uspSongsPerYear_Result)">
+      <Parameter Name="year" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="uspAllArtistSongsPertop2000Year" ReturnType="Collection(DB_A63478_DeechteTOP2000Model.uspAllArtistSongsPertop2000Year_Result)">
+      <Parameter Name="year" Mode="In" Type="Int32" />
+      <Parameter Name="artistID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="uspAllSongPositions" ReturnType="Collection(DB_A63478_DeechteTOP2000Model.uspAllSongPositions_Result)">
+      <Parameter Name="songID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="uspAllSongsWithAllPositions" ReturnType="Collection(DB_A63478_DeechteTOP2000Model.uspAllSongsWithAllPositions_Result)" />
+    <FunctionImport Name="uspSongNumTimesListed" ReturnType="Collection(DB_A63478_DeechteTOP2000Model.uspSongNumTimesListed_Result)">
+      <Parameter Name="songID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="uspSongsReEntry" ReturnType="Collection(DB_A63478_DeechteTOP2000Model.uspSongsReEntry_Result)">
+      <Parameter Name="year" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="uspSongTotallyGoneFromList" ReturnType="Collection(DB_A63478_DeechteTOP2000Model.uspSongTotallyGoneFromList_Result)">
+      <Parameter Name="year" Mode="In" Type="Int32" />
+    </FunctionImport>
+  </EntityContainer>
+  <ComplexType Name="uspAllArtistSongs_Result">
+    <Property Type="String" Name="naam" Nullable="false" MaxLength="100" />
+    <Property Type="String" Name="titel" Nullable="false" MaxLength="100" />
+    <Property Type="Int32" Name="Uitgebracht_in" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="uspArtistWithMuchSongs_Result">
+    <Property Type="String" Name="naam" Nullable="false" MaxLength="100" />
+    <Property Type="Int32" Name="top2000jaar" Nullable="false" />
+    <Property Type="Int32" Name="Aantal_songs" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="uspGoneFromList_Result">
+    <Property Type="String" Name="titel" Nullable="false" MaxLength="100" />
+    <Property Type="String" Name="naam" Nullable="false" MaxLength="100" />
+    <Property Type="Int32" Name="positie" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="uspNewlyListed_Result">
+    <Property Type="String" Name="titel" Nullable="false" MaxLength="100" />
+    <Property Type="String" Name="naam" Nullable="false" MaxLength="100" />
+    <Property Type="Int32" Name="positie" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="uspNumSongsPerArtistPerYear_Result">
+    <Property Type="String" Name="naam" Nullable="false" MaxLength="100" />
+    <Property Type="Int32" Name="top2000jaar" Nullable="false" />
+    <Property Type="Int32" Name="aantal_songs" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="uspSongsGained100Places_Result">
+    <Property Type="String" Name="titel" Nullable="false" MaxLength="100" />
+    <Property Type="String" Name="naam" Nullable="false" MaxLength="100" />
+    <Property Type="Int32" Name="positie" Nullable="false" />
+    <Property Type="Int32" Name="vorig_jaar" Nullable="false" />
+    <Property Type="Int32" Name="verschil" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="uspSongsGainedPlaces_Result">
+    <Property Type="String" Name="titel" Nullable="false" MaxLength="100" />
+    <Property Type="String" Name="naam" Nullable="false" MaxLength="100" />
+    <Property Type="Int32" Name="positie" Nullable="false" />
+    <Property Type="Int32" Name="vorig_jaar" Nullable="false" />
+    <Property Type="Int32" Name="verschil" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="uspSongsLost100Places_Result">
+    <Property Type="String" Name="titel" Nullable="false" MaxLength="100" />
+    <Property Type="String" Name="naam" Nullable="false" MaxLength="100" />
+    <Property Type="Int32" Name="positie" Nullable="false" />
+    <Property Type="Int32" Name="vorig_jaar" Nullable="false" />
+    <Property Type="Int32" Name="verschil" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="uspSongsLostPlaces_Result">
+    <Property Type="String" Name="titel" Nullable="false" MaxLength="100" />
+    <Property Type="String" Name="naam" Nullable="false" MaxLength="100" />
+    <Property Type="Int32" Name="positie" Nullable="false" />
+    <Property Type="Int32" Name="vorig_jaar" Nullable="false" />
+    <Property Type="Int32" Name="verschil" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="uspSongsOnSamePosition_Result">
+    <Property Type="String" Name="titel" Nullable="false" MaxLength="100" />
+    <Property Type="String" Name="naam" Nullable="false" MaxLength="100" />
+    <Property Type="Int32" Name="positie" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="uspSongsPerYear_Result">
+    <Property Type="String" Name="naam" Nullable="false" MaxLength="100" />
+    <Property Type="String" Name="titel" Nullable="false" MaxLength="100" />
+  </ComplexType>
+  <ComplexType Name="uspAllArtistSongsPertop2000Year_Result">
+    <Property Type="String" Name="naam" Nullable="false" MaxLength="100" />
+    <Property Type="String" Name="titel" Nullable="false" MaxLength="100" />
+    <Property Type="Int32" Name="top2000jaar" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="uspAllSongPositions_Result">
+    <Property Type="Int32" Name="songid" Nullable="false" />
+    <Property Type="String" Name="titel" Nullable="false" MaxLength="100" />
+    <Property Type="Int32" Name="jaar" Nullable="true" />
+    <Property Type="String" Name="naam" Nullable="false" MaxLength="100" />
+    <Property Type="Int32" Name="C1999" Nullable="true" />
+    <Property Type="Int32" Name="C2000" Nullable="true" />
+    <Property Type="Int32" Name="C2001" Nullable="true" />
+    <Property Type="Int32" Name="C2002" Nullable="true" />
+    <Property Type="Int32" Name="C2003" Nullable="true" />
+    <Property Type="Int32" Name="C2004" Nullable="true" />
+    <Property Type="Int32" Name="C2005" Nullable="true" />
+    <Property Type="Int32" Name="C2006" Nullable="true" />
+    <Property Type="Int32" Name="C2007" Nullable="true" />
+    <Property Type="Int32" Name="C2008" Nullable="true" />
+    <Property Type="Int32" Name="C2009" Nullable="true" />
+    <Property Type="Int32" Name="C2010" Nullable="true" />
+    <Property Type="Int32" Name="C2011" Nullable="true" />
+    <Property Type="Int32" Name="C2012" Nullable="true" />
+    <Property Type="Int32" Name="C2013" Nullable="true" />
+    <Property Type="Int32" Name="C2014" Nullable="true" />
+    <Property Type="Int32" Name="C2015" Nullable="true" />
+    <Property Type="Int32" Name="C2016" Nullable="true" />
+    <Property Type="Int32" Name="C2017" Nullable="true" />
+    <Property Type="Int32" Name="C2018" Nullable="true" />
+    <Property Type="Int32" Name="C2019" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="uspAllSongsWithAllPositions_Result">
+    <Property Type="Int32" Name="songid" Nullable="false" />
+    <Property Type="String" Name="titel" Nullable="false" MaxLength="100" />
+    <Property Type="Int32" Name="jaar" Nullable="true" />
+    <Property Type="String" Name="naam" Nullable="false" MaxLength="100" />
+    <Property Type="Int32" Name="C1999" Nullable="true" />
+    <Property Type="Int32" Name="C2000" Nullable="true" />
+    <Property Type="Int32" Name="C2001" Nullable="true" />
+    <Property Type="Int32" Name="C2002" Nullable="true" />
+    <Property Type="Int32" Name="C2003" Nullable="true" />
+    <Property Type="Int32" Name="C2004" Nullable="true" />
+    <Property Type="Int32" Name="C2005" Nullable="true" />
+    <Property Type="Int32" Name="C2006" Nullable="true" />
+    <Property Type="Int32" Name="C2007" Nullable="true" />
+    <Property Type="Int32" Name="C2008" Nullable="true" />
+    <Property Type="Int32" Name="C2009" Nullable="true" />
+    <Property Type="Int32" Name="C2010" Nullable="true" />
+    <Property Type="Int32" Name="C2011" Nullable="true" />
+    <Property Type="Int32" Name="C2012" Nullable="true" />
+    <Property Type="Int32" Name="C2013" Nullable="true" />
+    <Property Type="Int32" Name="C2014" Nullable="true" />
+    <Property Type="Int32" Name="C2015" Nullable="true" />
+    <Property Type="Int32" Name="C2016" Nullable="true" />
+    <Property Type="Int32" Name="C2017" Nullable="true" />
+    <Property Type="Int32" Name="C2018" Nullable="true" />
+    <Property Type="Int32" Name="C2019" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="uspSongNumTimesListed_Result">
+    <Property Type="Int32" Name="songid" Nullable="false" />
+    <Property Type="String" Name="titel" Nullable="false" MaxLength="100" />
+    <Property Type="String" Name="Artiest" Nullable="false" MaxLength="100" />
+    <Property Type="Int32" Name="Times_Listed" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="uspSongsReEntry_Result">
+    <Property Type="Int32" Name="songid" Nullable="false" />
+    <Property Type="String" Name="titel" Nullable="false" MaxLength="100" />
+    <Property Type="String" Name="naam" Nullable="false" MaxLength="100" />
+    <Property Type="Int32" Name="positie" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="uspSongTotallyGoneFromList_Result">
+    <Property Type="String" Name="titel" Nullable="false" MaxLength="100" />
+    <Property Type="String" Name="naam" Nullable="false" MaxLength="100" />
+    <Property Type="Int32" Name="Laatste_positie" Nullable="false" />
+  </ComplexType>
+</Schema>

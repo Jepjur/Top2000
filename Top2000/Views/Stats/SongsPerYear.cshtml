@@ -1,0 +1,65 @@
+﻿@model IPagedList<Top2000.Models.uspSongsPerYear_Result>
+@using PagedList;
+@using PagedList.Mvc
+
+@{
+    ViewBag.Title = "Index";
+    <h2>Alle songs die in een bepaald jaar zijn uitgebracht</h2>
+}
+
+@Html.Partial("YearFilter")
+
+
+<table class="table table-striped table-dark " id="yearlist">
+    <thead>
+
+        <tr>
+
+            <th>
+                @Html.ActionLink(Html.DisplayNameFor(model => model.FirstOrDefault().naam).ToString(),
+               "SongsPerYear", new
+               {
+                   sortOrder = ViewBag.NameSortParm == "artiest_asc" ? "artiest_desc" : "artiest_asc",
+                   year = ViewBag.CurrentFilter
+
+               })
+            </th>
+            <th>
+                @Html.ActionLink(Html.DisplayNameFor(model => model.FirstOrDefault().titel).ToString(),
+               "SongsPerYear", new
+               {
+                   sortOrder = ViewBag.NameSortParm == "titel_asc" ? "titel_desc" : "titel_asc",
+                   year = ViewBag.CurrentFilter
+               })
+            </th>
+            <th></th>
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+        @foreach (var item in Model)
+        {
+            <tr class="listRow">
+
+                <td class="positie">
+                    @Html.DisplayFor(modelItem => item.naam)
+                </td>
+                <td class="differenceCell">
+                    @Html.DisplayFor(modelItem => item.titel)
+                </td>
+            </tr>
+
+        }
+
+    </tbody>
+
+</table>
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+@Html.PagedListPager(Model, page => Url.Action("SongsPerYear", "Stats",
+    new { year = ViewBag.CurrentFilter, page = page }))
+
+
+
+

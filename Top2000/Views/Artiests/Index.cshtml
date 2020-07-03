@@ -1,0 +1,68 @@
+﻿@model PagedList.IPagedList<Top2000.Models.Artiest>
+@using PagedList.Mvc
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Artiesten</h2>
+@using (Html.BeginForm())
+{
+    @Html.Partial("Search")
+}
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table table-striped table-dark">
+    <tr>
+        <th>
+            @Html.ActionLink(Html.DisplayNameFor(model => model.FirstOrDefault().naam).ToString(), "Index",
+                            new
+                            {
+                                sortOrder = ViewBag.NameSortParm == "name_desc" ? "name_asc" : "name_desc",
+                                searchString = ViewBag.CurrentFilter
+                            })
+        </th>
+        <th>
+            @Html.DisplayNameFor(model=>model.FirstOrDefault().foto)
+        </th>
+
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.naam)
+            </td>
+            <td>
+                @{
+                    if (item.foto.IsEmpty())
+                    {
+                        <img width="100" height="100" src="https://artkentro.com/uploads/hub/1560326382ampd-dubai.jpg">
+                    }
+                    else
+                    {
+                        <a href="@item.foto" target="_blank">
+                            <img width="100" height="100" src="@Html.DisplayFor(modelItem => item.foto)">
+                        </a>
+                    }
+                }
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Artiestid }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Artiestid }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Artiestid })
+            </td>
+        </tr>
+    }
+
+</table>
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new
+    {
+        page = page,
+        searchString = ViewBag.CurrentFilter
+    }))
+

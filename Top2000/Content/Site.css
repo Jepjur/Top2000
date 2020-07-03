@@ -1,0 +1,106 @@
+﻿body {
+    background-image: url(https://c.pxhere.com/photos/5d/e4/audio_e_guitars_guitars_music_musical_instruments_rock-918391.jpg!d);
+    background-size: cover;
+    background-position:center;
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+.dropbtn {
+    background-color:black;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+
+    .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+
+        .dropdown-content a:hover {
+            background-color: #ddd;
+        }
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown:hover .dropbtn {
+    background-color: #32383e;
+}
+.table-dark,
+.table-dark > th,
+.table-dark > td {
+    background-color: #c6c8ca;
+}
+
+.table-hover .table-dark:hover {
+    background-color: #b9bbbe;
+}
+
+    .table-hover .table-dark:hover > td,
+    .table-hover .table-dark:hover > th {
+        background-color: #b9bbbe;
+    }
+
+.table-dark {
+    color: #fff;
+    background-color: #212529;
+}
+
+    .table-dark th,
+    .table-dark td,
+    .table-dark thead th {
+        border-color: #32383e;
+    }
+
+
+    .table-dark.table-bordered {
+        border: 0;
+    }
+
+    .table-dark.table-striped tbody tr:nth-of-type(odd) {
+        background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .table-dark.table-hover tbody tr:hover {
+        background-color: rgba(255, 255, 255, 0.075);
+    }
